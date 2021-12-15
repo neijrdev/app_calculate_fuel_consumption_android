@@ -14,7 +14,7 @@ import org.robolectric.annotation.Config
 
 
 @RunWith(RobolectricTestRunner::class)
-@Config(sdk = [Build.VERSION_CODES.O_MR1])
+@Config(sdk = [Build.VERSION_CODES.O_MR1], qualifiers="pt-port")
 class MainActivityUnitTest {
 
     @Test

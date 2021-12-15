@@ -4,43 +4,65 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'jacoco'
 }
+//
+//tasks.withType(Test) {
+//    testLogging {
+//        // set options for log level LIFECYCLE
+//        events TestLogEvent.FAILED,
+//                TestLogEvent.PASSED,
+//                TestLogEvent.SKIPPED,
+//                TestLogEvent.STANDARD_OUT
+//        exceptionFormat TestExceptionFormat.FULL
+//        showExceptions true
+//        showCauses true
+//        showStackTraces true
+//
+//        // set options for log level DEBUG and INFO
+//        debug {
+//            events TestLogEvent.STARTED,
+//                    TestLogEvent.FAILED,
+//                    TestLogEvent.PASSED,
+//                    TestLogEvent.SKIPPED,
+//                    TestLogEvent.STANDARD_ERROR,
+//                    TestLogEvent.STANDARD_OUT
+//            exceptionFormat TestExceptionFormat.FULL
+//        }
+//        info.events = debug.events
+//        info.exceptionFormat = debug.exceptionFormat
+//
+//        afterSuite { desc, result ->
+//            if (!desc.parent) { // will match the outermost suite
+//                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
+//                def startItem = '|  ', endItem = '  |'
+//                def repeatLength = startItem.length() + output.length() + endItem.length()
+//                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+//            }
+//        }
+//    }
+//}
+//
+//task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+//
+//    reports {
+//        xml.enabled = true
+//        html.enabled = true
+//    }
+//
+//    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+//    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
+//    def mainSrc = "${project.projectDir}/src/main/java"
+//
+//    sourceDirectories.setFrom(files([mainSrc]))
+//    classDirectories.setFrom(files([debugTree]))
+//    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
+//            "jacoco/testDebugUnitTest.exec",
+//            "outputs/code-coverage/connected/*coverage.ec"
+//    ]))
+//}
 
-tasks.withType(Test) {
-    testLogging {
-        // set options for log level LIFECYCLE
-        events TestLogEvent.FAILED,
-                TestLogEvent.PASSED,
-                TestLogEvent.SKIPPED,
-                TestLogEvent.STANDARD_OUT
-        exceptionFormat TestExceptionFormat.FULL
-        showExceptions true
-        showCauses true
-        showStackTraces true
-
-        // set options for log level DEBUG and INFO
-        debug {
-            events TestLogEvent.STARTED,
-                    TestLogEvent.FAILED,
-                    TestLogEvent.PASSED,
-                    TestLogEvent.SKIPPED,
-                    TestLogEvent.STANDARD_ERROR,
-                    TestLogEvent.STANDARD_OUT
-            exceptionFormat TestExceptionFormat.FULL
-        }
-        info.events = debug.events
-        info.exceptionFormat = debug.exceptionFormat
-
-        afterSuite { desc, result ->
-            if (!desc.parent) { // will match the outermost suite
-                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} passed, ${result.failedTestCount} failed, ${result.skippedTestCount} skipped)"
-                def startItem = '|  ', endItem = '  |'
-                def repeatLength = startItem.length() + output.length() + endItem.length()
-                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
-            }
-        }
-    }
-}
+apply from: "$project.rootDir/jacoco.gradle"
 
 android {
     compileSdkVersion 30
@@ -57,6 +79,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled = true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

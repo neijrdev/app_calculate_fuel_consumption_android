@@ -98,12 +98,6 @@ android {
         unitTests {
             includeAndroidResources = true
         }
-//        unitTests.all {
-//            jacoco {
-//                includeNoLocationClasses = true
-//            }
-//        }
-//        unitTests.returnDefaultValues = true
     }
     buildFeatures {
         viewBinding true
